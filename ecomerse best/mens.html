@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #fliters{
+            display: flex;
+        }
+        #container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap:30px;
+            background-color: lightgrey;
+        }
+        #boxy{
+            display: flex;
+        }
+        #boxy>p:last-child
+        {
+            text-decoration: line-through;
+            margin-left: 10%;
+        }
+        h4{
+            font-size: small;
+        }
+        button{
+            color:whitesmoke;
+            background-color: red;
+            width:100px;
+            height:30px;
+            border-radius: 10px;
+            margin-left: 3%;
+        }
+    </style>
+</head>
+<body>
+    <div id="fliters">
+        <div><button onclick="window.location.href='./pdp.html'">Goto cart</button> </div>
+        <select onchange="sorting()" id="sort">
+            <option value="">---</option>
+            <option value="h2l">h2l</option>
+            <option value="l2h">l2h</option>
+        </select>
+        <input onkeyup="searchq()" id="search"/>
+        <select onchange="filtering()" id="filtering">
+            <option value="---"></option>
+            <option value="500">>500</option>
+            <option value="1000">>1000</option>
+            <option value="3000">>3000</option>
+            <option value="5000">>5000</option>
+        </select>
+        <button onclick="reset()">reset11</button>
+    </div>
+    <h1 id="count">"SHOWING" 35 ITEMS</h1>
+    <div id="container">
+
+    </div>
+    <h3>total cost</h3>
+    <h4 id="amm"></h4>
+
+</body>
+</html>
+ <script src="./mens.js" ></script>
+<script>
+
+    var getdata=JSON.parse(localStorage.getItem("Mens"));
+    var cartarr=JSON.parse(localStorage.getItem("cartitem"))||[];
+    display(getdata);
+
+    function display(getdata)
+    {
+        document.getElementById("container").innerHTML="";
+        getdata.map(function(ele,ind,arr){
+        var box=document.createElement("div");
+        var img=document.createElement("img");
+        img.setAttribute("src",ele.image_url);
+        var h4=document.createElement("h4");
+        h4.innerText=ele.name;
+        var box2=document.createElement("div");
+        box2.setAttribute("id","boxy")
+        var price=document.createElement("p");
+        price.innerText=ele.price;
+        var strprice=document.createElement("p");
+        strprice.innerText=ele.strikedoffprice;
+        box2.append(price,strprice);
+        var addto=document.createElement("button")
+        addto.innerText="add to cart";
+        addto.addEventListener("click",function(){
+
+            addtocart(ele);
+        })
+        box.append(img,h4,box2,addto);
+        document.querySelector("#container").append(box);
+
+    })
+
+}
+
+    function addtocart(ele)
+    {
+        ele.qunt=1;
+        cartarr.push(ele);
+        localStorage.setItem("cartitem",JSON.stringify(cartarr))
+    }
+
+
+    function sorting()
+    {
+        var objective=document.querySelector("#sort").value;
+        console.log(objective)
+
+        if(objective=="h2l")
+        {
+        getdata.sort(function(a,b){
+            return b.price-a.price;
+        })
+        console.log(getdata)
+        display(getdata)
+    }
+
+    if(objective=="l2h")
+        {
+        getdata.sort(function(a,b){
+            return a.price-b.price;
+        })
+        console.log(getdata)
+        display(getdata)
+    }
+    document.querySelector("#count").innerText="showing"+" "+getdata.length+" "+"items";
+    }
+
+    function searchq()
+    {
+        var search=document.getElementById("search").value;
+
+        var searchdata=getdata.filter(function(ele,ind,arr){
+            return ele.name.includes(search);
+        })
+
+        console.log(getdata)
+        display(searchdata)
+
+        document.querySelector("#count").innerText="showing"+" "+searchdata.length+" "+"items";
+    }
+
+
+    function filtering()
+    {
+        var filtere=document.getElementById("filtering").value;
+
+        var filtered_price=getdata.filter(function(ele,ind,arr){
+            return (ele.price >= filtere);
+        })
+        display(filtered_price)
+        document.querySelector("#count").innerText="showing"+" "+filtered_price.length+" "+"items";
+    }
+
+    function filterall()
+    {
+        var search=document.getElementById("search").value;
+        var filtere=document.getElementById("filtering").value;
+        var objective=document.querySelector("#sort").value;
+    }
+    function reset()
+       {
+         var getdata=JSON.parse(localStorage.getItem("Mens"));
+         display(getdata)
+        document.getElementById("search").value="";
+        document.getElementById("filtering").value="";
+        document.querySelector("#sort").value="";
+       }
+</script>

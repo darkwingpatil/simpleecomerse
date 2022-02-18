@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap:30px;
+            background-color: plum;
+        }
+
+        #box2{
+            display: flex;
+            justify-content: space-between;
+            margin-right:150px
+        }
+        button{
+            background-color: red;
+            font-size: larger;
+        }
+    </style>
+</head>
+<body>
+    <div><button onclick="window.location.href='./wpdp.html'">go to cart</button></div>
+    <div id="container">
+
+    </div>
+</body>
+</html>
+<script src="./womensData.js"></script>
+<script>
+var eledata=JSON.parse(localStorage.getItem("womensData"));
+var cartdata=JSON.parse(localStorage.getItem("createcart"))|| [];
+
+function display(eledata)
+{
+    eledata.map(function(ele,ind,arr){
+        var box=document.createElement("div");
+        var img=document.createElement("img");
+        img.setAttribute("src",ele.image_url)
+        var h4=document.createElement("h4");
+        h4.innerText=ele.name;
+        var box2=document.createElement("div");
+        box2.setAttribute("id","box2")
+        var p1=document.createElement("p");
+        p1.innerText=ele.price;
+        var p2=document.createElement("p");
+        p2.innerText=ele.strikedoffprice;
+        p2.style.textDecoration="line-through";
+        box2.append(p1,p2);
+        var btn=document.createElement("button");
+        btn.innerText="add to cart";
+        var qty=document.createElement("p");
+        btn.addEventListener("click",function(){
+            addtolist(ele);
+        })
+        box.append(img,h4,box2,btn);
+        document.getElementById("container").append(box);
+    })
+}
+
+display(eledata)
+
+function addtolist(ele)
+{
+    ele.qty=1;
+    cartdata.push(ele);
+    console.log(cartdata)
+    localStorage.setItem("createcart",JSON.stringify(cartdata))
+}
+</script>

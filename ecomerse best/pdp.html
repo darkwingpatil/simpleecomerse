@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+                #container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap:30px;
+            background-color: lightgrey;
+        }
+        #boxy{
+            display: flex;
+        }
+        #boxy>p:last-child
+        {
+            text-decoration: line-through;
+            margin-left: 10%;
+        }
+        h4{
+            font-size: small;
+        }
+        button{
+            color:whitesmoke;
+            background-color: red;
+            width:100px;
+            height:30px;
+            border-radius: 10px;
+            margin-left: 3%;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="refresh()">Go back</button>
+    <div id="container">
+
+    </div>
+    <h1 id="total">0</h1>
+</body>
+</html>
+<script>
+    var cartarr=JSON.parse(localStorage.getItem("cartitem"))||[];
+    console.log(cartarr);
+    display(cartarr)
+    function display(cartarr)
+    {
+        document.querySelector("#container").innerHTML="";
+        cartarr.map(function(ele,ind,arr){
+        var box=document.createElement("div");
+        var img=document.createElement("img");
+        img.setAttribute("src",ele.image_url);
+        var h4=document.createElement("h4");
+        h4.innerText=ele.name;
+        var box2=document.createElement("div");
+        box2.setAttribute("id","boxy")
+        var price=document.createElement("p");
+        price.innerText=ele.price+"-"+ele.qunt;
+        var strprice=document.createElement("p");
+        strprice.innerText=ele.strikedoffprice;
+        box2.append(price,strprice);
+        var addqnt=document.createElement("button");
+        addqnt.innerText="1+quantity";
+        addqnt.addEventListener("click",function(){
+            increase(ind)
+        })
+        var addqnt1=document.createElement("button")
+        addqnt1.innerText="1-quantity";
+        addqnt1.addEventListener("click",function(){
+            decrease(ind)
+        })
+
+        var addqnt3=document.createElement("button")
+        addqnt3.innerText="remove item";
+        addqnt3.addEventListener("click",function(){
+            removeitm(ind)
+        })
+        box.append(img,h4,box2,addqnt,addqnt1,addqnt3);
+        document.querySelector("#container").append(box);
+
+    })
+
+    var total=cartarr.reduce(function(acc,ele){
+        return acc+ele.price*ele.qunt;
+    },0)
+
+    document.querySelector("#total").innerText=total;
+
+}
+
+
+function increase(index)
+    {
+        console.log(cartarr)
+        cartarr[index]["qunt"]++;
+       // localStorage.setItem("cartitem",JSON.stringify(cartarr))
+        display(cartarr);
+        //window.location.reload();       
+    }
+
+    function decrease(ind)
+    {
+        cartarr[ind].qunt--;
+       // localStorage.setItem("cartitem",JSON.stringify(cartarr))
+        display(cartarr);
+    }
+
+
+    function removeitm(ind)
+    {
+        var x=cartarr[ind].name;
+        console.log(x)
+        for(var i=0;i<cartarr.length;i++)
+        {
+            if(cartarr[ind].qunt==1)
+            {
+              if(x==cartarr[i].name)
+              {
+                 cartarr.splice(i,1);
+              }
+          }
+        else
+        {
+            alert("set your quantatity to 1")
+        }
+    }
+
+        console.log(cartarr);
+        display(cartarr)
+
+    }
+    function refresh()
+    {
+        document.querySelector("#container").innerHTML="";
+        document.querySelector("#total").innerText=0;       
+        window.location.href="./mens.html"
+    }
+
+</script>
+
+

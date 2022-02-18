@@ -1,0 +1,17 @@
+#conatiner{
+    display: grid;
+    grid-template-columns: 1fr;
+    width:80%;
+    margin: auto;
+
+}
+h1{
+    text-align: center;
+}
+#conatiner>div{
+    font-size: 30px;
+}
+#box2{
+    display: flex;
+    justify-content: space-between;
+}
